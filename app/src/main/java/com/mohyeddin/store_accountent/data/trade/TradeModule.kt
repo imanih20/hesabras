@@ -20,6 +20,7 @@ import com.mohyeddin.store_accountent.domain.trade.usecase.GetTradesUseCase
 import com.mohyeddin.store_accountent.presentation.dashboard.viewmodel.DashboardViewModel
 import com.mohyeddin.store_accountent.presentation.main.viewmodel.MainViewModel
 import com.mohyeddin.store_accountent.presentation.trade.viewmodel.AddPurchaseViewModel
+import com.mohyeddin.store_accountent.presentation.trade.viewmodel.FilterViewModel
 import com.mohyeddin.store_accountent.presentation.trade.viewmodel.PurchaseListViewModel
 import com.mohyeddin.store_accountent.presentation.trade.viewmodel.SaleListViewModel
 import com.mohyeddin.store_accountent.presentation.trade.viewmodel.TradesViewModel
@@ -79,5 +80,9 @@ val tradeModule = module {
             CountPurchasesUseCase(get()),
             CountSalesUseCase(get())
         )
+    }
+
+    viewModel {
+        FilterViewModel(get())
     }
 }

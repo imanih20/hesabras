@@ -117,8 +117,8 @@ fun FilterContent(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             TypeOptions.values().forEach {
-                RadioTextButton(title = it.title, selected = state.type == it.value) {
-                    state.type = it.value
+                RadioTextButton(title = it.title, selected = state.type == it.storeValue) {
+                    state.type = it.storeValue
                 }
             }
         }

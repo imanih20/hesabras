@@ -1,6 +1,7 @@
 package com.mohyeddin.store_accountent.presentation.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -125,9 +126,13 @@ fun DashboardScreenContent(
             if (isTradeLoading){
                 TradListShimmer()
             }else{
-                LazyColumn {
-                    items(tradeList){trade->
-                        TradeItem(trade = trade)
+                if (tradeList.isEmpty()) Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                    MyText(text ="خرید و فروشی صورت نگرفته است")
+                }else{
+                    LazyColumn {
+                        items(tradeList){trade->
+                            TradeItem(trade = trade)
+                        }
                     }
                 }
             }
@@ -195,11 +200,11 @@ fun DashboardCard(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun DashBoardPreview() {
-    val tradeList = listOf(
-        Trade("","بوم بوم",5.0,100000,"s","n","")
+    val tradeList = listOf<Trade>(
+//        Trade("","بوم بوم",5.0,100000,"s","n","")
     )
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         DashboardScreenContent(
