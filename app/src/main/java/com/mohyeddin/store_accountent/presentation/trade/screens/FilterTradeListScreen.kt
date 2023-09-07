@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -31,18 +30,21 @@ import com.mohyeddin.datepicker.date.DatePickerDialog
 import com.mohyeddin.store_accountent.presentation.common.components.IconBox
 import com.mohyeddin.store_accountent.presentation.common.components.MyButton
 import com.mohyeddin.store_accountent.presentation.common.components.MyText
+import com.mohyeddin.store_accountent.presentation.common.utils.BottomBarNavGraph
 import com.mohyeddin.store_accountent.presentation.trade.stateholders.FilterScreenStateHolder
 import com.mohyeddin.store_accountent.presentation.trade.stateholders.rememberFilterScreenState
 import com.mohyeddin.store_accountent.presentation.trade.utils.TypeOptions
 import com.mohyeddin.store_accountent.presentation.trade.viewmodel.FilterViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Calendar
 import org.koin.androidx.compose.koinViewModel
 
+@BottomBarNavGraph
 @Destination
 @Composable
-fun FilterTradeListScreen(viewModel: FilterViewModel = koinViewModel()) {
+fun FilterTradeListScreen(navigator: DestinationsNavigator,viewModel: FilterViewModel = koinViewModel()) {
     val contentState = rememberFilterScreenState(date = viewModel.getDate(), type = viewModel.getType())
     Scaffold(
         bottomBar = {
@@ -51,6 +53,7 @@ fun FilterTradeListScreen(viewModel: FilterViewModel = koinViewModel()) {
                 onclick = {
                     viewModel.saveDate(contentState.date)
                     viewModel.saveType(contentState.type)
+                    navigator.popBackStack()
                 },
                 Modifier
                     .padding(10.dp)

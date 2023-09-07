@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -55,16 +54,11 @@ fun TradeScreen(navigator: DestinationsNavigator,viewModel : TradesViewModel = k
     val isLoading = viewModel.isLoading.collectAsState()
     MyScaffold(
         viewModel = viewModel,
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navigator.navigate(FilterTradeListScreenDestination) }) {
-                IconBox(imageVector = TablerIcons.Filter)
-            }
-        }
     ){
         if (isLoading.value){
             TradListShimmer()
         }else{
-            TradeScreenContent(tradeList = tradeList.value)
+            TradeScreenContent(tradeList = tradeList.value){ navigator.navigate(FilterTradeListScreenDestination) }
         }
     }
 }
@@ -76,40 +70,50 @@ fun TradeScreen(navigator: DestinationsNavigator,viewModel : TradesViewModel = k
 fun TradeScreenContent(
     modifier: Modifier = Modifier,
     tradeList : List<Trade>,
+    onFilterClick: ()->Unit
 ) {
     Box(modifier = modifier
         .fillMaxSize()
         .padding(10.dp)){
-        Column {
-            LazyColumn{
-                stickyHeader {
-                    TradeHeader()
-                    Spacer(modifier = Modifier.size(3.dp))
-                }
-                items(tradeList){trade->
-                    TradeItem(trade = trade)
-                    Spacer(modifier = Modifier.size(2.dp))
-                }
+        LazyColumn{
+            stickyHeader {
+                TradeHeader()
+                Spacer(modifier = Modifier.size(3.dp))
+            }
+            items(tradeList){trade->
+                TradeItem(trade = trade)
+                Spacer(modifier = Modifier.size(2.dp))
             }
         }
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .align(alignment = Alignment.BottomCenter)) {
-            Row(
-                Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                val style = MaterialTheme.typography.titleLarge
-                MyText(text = "قیمت کل: ",style = style)
-                MyText(
-                    tradeList
-                        .sumOf { it.totalPrice }
-                        .toString()
-                        .addNumberSeparator() + " تومان",
-                    style = style.copy(color = MaterialTheme.colorScheme.secondary),
-                    modifier = Modifier.padding(start = 10.dp)
-                )
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .align(alignment = Alignment.BottomCenter),
+            horizontalAlignment = Alignment.End
+        ) {
+            FloatingActionButton(onClick = onFilterClick) {
+                IconBox(imageVector = TablerIcons.Filter)
+            }
+            Spacer(modifier = Modifier.size(10.dp))
+            Card(modifier = Modifier
+                .fillMaxWidth()
+            ) {
+                Row(
+                    Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
+                    val style = MaterialTheme.typography.titleLarge
+                    MyText(text = "قیمت کل: ",style = style)
+                    MyText(
+                        tradeList
+                            .sumOf { it.totalPrice }
+                            .toString()
+                            .addNumberSeparator() + " تومان",
+                        style = style.copy(color = MaterialTheme.colorScheme.secondary),
+                        modifier = Modifier.padding(start = 10.dp)
+                    )
+                }
             }
         }
     }
@@ -165,6 +169,6 @@ fun TradePreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         TradeScreenContent(tradeList = listOf(
             Trade("","رب",10.0,10000,"p","n","1402-12-03")
-        ))
+        )){}
     }
 }
